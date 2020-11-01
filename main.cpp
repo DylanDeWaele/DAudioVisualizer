@@ -1,8 +1,14 @@
 #include <iostream>
+#include <Dsound.h>
 
-int main() 
+//https://docs.microsoft.com/en-us/previous-versions/windows/desktop/ee416960(v=vs.85)
+
+int main()
 {
-	std::cout << "Hello world!";
 
+	
+
+
+	
 	return 1;
 }
