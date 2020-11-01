@@ -1,0 +1,2 @@
+D:\Documenten\Audio\Projects\AudioVisualizer\DAudioVisualizer\Debug\DAudioVisualizer.exe
+D:\Documenten\Audio\Projects\AudioVisualizer\DAudioVisualizer\Debug\DAudioVisualizer.pdb
