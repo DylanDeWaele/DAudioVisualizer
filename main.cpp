@@ -1,5 +1,6 @@
 #include <vld.h>
 #include "DAudio.h"
+#include "DSound.h"
 
 int main()
 {
@@ -20,6 +21,11 @@ int main()
 	DAudio::GetInstance().PrintCurrentAudioDevice();
 
 	std::cout << std::endl;
+
+	//Create a sound
+	DSound* pSound = new DSound{};
+
+	delete pSound;
 
 	return 1;
 }
