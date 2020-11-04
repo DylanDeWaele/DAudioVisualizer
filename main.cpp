@@ -9,6 +9,8 @@ int main()
 	//Get the audio devices
 	DAudio::GetInstance().Initialize();
 
+	std::cout << std::endl;
+
 	//Print to see available devices
 	DAudio::GetInstance().PrintAudioDevices();
 	
@@ -20,12 +22,7 @@ int main()
 	//Print the current device
 	DAudio::GetInstance().PrintCurrentAudioDevice();
 
-	std::cout << std::endl;
-
-	//Create a sound
-	DSound* pSound = new DSound{};
-
-	delete pSound;
-
+	std::cout << std::endl;	
+	
 	return 1;
 }

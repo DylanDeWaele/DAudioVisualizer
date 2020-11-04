@@ -51,6 +51,8 @@ public:
 
 	//Gets the current active audio device
 	Device* GetCurrentAudioDevice() const;
+	LPDIRECTSOUND GetDirectSound() const;
+	LPDIRECTSOUNDBUFFER GetPrimarySoundBuffer() const;
 
 	void PrintAudioDevices() const;
 	void PrintCurrentAudioDevice() const;
@@ -65,4 +67,8 @@ private:
 
 	std::vector<Device*> m_pAudioDevices;
 	Device* m_pCurrentAudioDevice;
+
+	LPDIRECTSOUND m_pDirectSound;
+
+	LPDIRECTSOUNDBUFFER m_pPrimarySoundBuffer;
 };
