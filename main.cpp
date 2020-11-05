@@ -1,28 +1,41 @@
 #include <vld.h>
-#include "DAudio.h"
-#include "DSound.h"
+#include <DSound.h>
+
+#include "DDWAudio.h"
+#include "DDWMasterParser.h"
 
 int main()
 {
+	DDWAudio* pAudioEngine = new DDWAudio{};
+
 	std::cout << std::endl;
 
 	//Get the audio devices
-	DAudio::GetInstance().Initialize();
+	pAudioEngine->Initialize();
 
 	std::cout << std::endl;
 
 	//Print to see available devices
-	DAudio::GetInstance().PrintAudioDevices();
-	
+	pAudioEngine->PrintAudioDevices();
+
 	std::cout << std::endl;
 
 	//Select a device
-	DAudio::GetInstance().SelectAudioDevice(1);
+	pAudioEngine->SelectAudioDevice(1);
 
 	//Print the current device
-	DAudio::GetInstance().PrintCurrentAudioDevice();
+	pAudioEngine->PrintCurrentAudioDevice();
 
-	std::cout << std::endl;	
-	
+	//Play the primary sound buffer
+	pAudioEngine->GetPrimarySoundBuffer()->Play(0, 0, DSBPLAY_LOOPING);
+
+	std::cout << std::endl;
+
+	DDWMasterParser::GetInstance().LoadAudioFile("Trunk.wav", nullptr);
+
+	std::cout << std::endl;
+
+	delete pAudioEngine;
+
 	return 1;
 }

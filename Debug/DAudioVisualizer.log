@@ -1,2 +1,5 @@
-﻿  main.cpp
+﻿  DDWMasterParser.cpp
+D:\Documenten\Audio\Projects\AudioVisualizer\DAudioVisualizer\DDWMasterParser.cpp(131,121): warning C4100: 'soundBuffer': unreferenced formal parameter
+D:\Documenten\Audio\Projects\AudioVisualizer\DAudioVisualizer\DDWMasterParser.cpp(131,91): warning C4100: 'wavFile': unreferenced formal parameter
+D:\Documenten\Audio\Projects\AudioVisualizer\DAudioVisualizer\DDWMasterParser.cpp(131,63): warning C4100: 'file': unreferenced formal parameter
   DAudioVisualizer.vcxproj -> D:\Documenten\Audio\Projects\AudioVisualizer\DAudioVisualizer\Debug\DAudioVisualizer.exe

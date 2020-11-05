@@ -151,11 +151,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="DAudio.cpp" />
+    <ClCompile Include="DDWAudio.cpp" />
+    <ClCompile Include="DDWMasterParser.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DAudio.h" />
+    <ClInclude Include="DDWAudio.h" />
+    <ClInclude Include="DDWMasterParser.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
