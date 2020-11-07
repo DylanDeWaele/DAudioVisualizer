@@ -35,7 +35,7 @@ public:
 	DDWAudio& operator=(DDWAudio&& other) = delete; //Move assignment
 
 	//Public member functions
-	void Initialize();
+	void Initialize(int index = 0);
 
 	//This functions sets the current audio device to the audio device at the given index
 	void SelectAudioDevice(int index);
@@ -48,14 +48,15 @@ public:
 	void PrintAudioDevices() const;
 	void PrintCurrentAudioDevice() const;
 
+	//Singleton pattern
+	static DDWAudio& GetInstance();
+
 	//Using static functions so we can access them inside the CALLBACK function
 	static std::string GetFullDescription(LPGUID guid, LPCSTR desc); //Get full description of audio device
 	static std::string GetFullModule(LPGUID guid, LPCSTR mod); //Get full module of audio device
 
 private:
 	//Private data members
-	HRESULT m_Hr;
-
 	std::vector<Device*> m_pAudioDevices;
 	Device* m_pCurrentAudioDevice;
 

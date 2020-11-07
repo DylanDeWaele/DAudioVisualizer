@@ -25,11 +25,10 @@ BOOL CALLBACK EnumCallback(LPGUID guid, LPCSTR desc, LPCSTR mod, LPVOID list)
 #pragma endregion
 
 DDWAudio::DDWAudio()
-	: m_Hr{},
-	m_pAudioDevices{},
-	m_pCurrentAudioDevice{nullptr},
-	m_pDirectSound{nullptr},
-	m_pPrimarySoundBuffer{nullptr}
+	: m_pAudioDevices{},
+	m_pCurrentAudioDevice{ nullptr },
+	m_pDirectSound{ nullptr },
+	m_pPrimarySoundBuffer{ nullptr }
 {
 }
 
@@ -79,32 +78,38 @@ void DDWAudio::PrintCurrentAudioDevice() const
 	std::cout << m_pCurrentAudioDevice->description << " " << m_pCurrentAudioDevice->module << std::endl;
 }
 
-void DDWAudio::Initialize()
+DDWAudio& DDWAudio::GetInstance()
 {
-	m_Hr = DirectSoundEnumerate(LPDSENUMCALLBACK(EnumCallback), &m_pAudioDevices);
+	static DDWAudio instance{};
+	return instance;
+}
 
-	if (FAILED(m_Hr))
+void DDWAudio::Initialize(int index)
+{
+	HRESULT hr = DirectSoundEnumerate(LPDSENUMCALLBACK(EnumCallback), &m_pAudioDevices);
+
+	if (FAILED(hr))
 	{
 		std::cout << "Failed to get audio devices." << std::endl;
 		return;
 	}
 
 	//The current audio device is the primary one by default
-	m_pCurrentAudioDevice = m_pAudioDevices[0];
+	m_pCurrentAudioDevice = m_pAudioDevices[index];
 
 	//Create direct sound object
-	m_Hr = DirectSoundCreate(m_pCurrentAudioDevice->guid, &m_pDirectSound, nullptr);
+	hr = DirectSoundCreate(m_pCurrentAudioDevice->guid, &m_pDirectSound, nullptr);
 
-	if (FAILED(m_Hr))
+	if (FAILED(hr))
 	{
 		std::cout << "Failed to create DirectSound." << std::endl;
 		return;
 	}
 
 	//Set the cooperative level
-	m_Hr = m_pDirectSound->SetCooperativeLevel(GetDesktopWindow(), DSSCL_NORMAL); //I suppose I need to change this to the window handle?
+	hr = m_pDirectSound->SetCooperativeLevel(GetDesktopWindow(), DSSCL_NORMAL); //I suppose I need to change this to the window handle?
 
-	if (FAILED(m_Hr))
+	if (FAILED(hr))
 	{
 		std::cout << "Failed to set cooperative level of DirectSound." << std::endl;
 		return;
@@ -127,9 +132,9 @@ void DDWAudio::Initialize()
 	waveFormat.nAvgBytesPerSec = 176400; //From documentation: { If wFormatTag is WAVE_FORMAT_PCM, nAvgBytesPerSec should be equal to the product of nSamplesPerSec and nBlockAlign.} => (44100 * 4 = 176400)
 
 	//Create the primary buffer
-	m_Hr = m_pDirectSound->CreateSoundBuffer(&bufferDesc, &m_pPrimarySoundBuffer, nullptr);
+	hr = m_pDirectSound->CreateSoundBuffer(&bufferDesc, &m_pPrimarySoundBuffer, nullptr);
 
-	if (FAILED(m_Hr))
+	if (FAILED(hr))
 	{
 		std::cout << "Failed to create primary sound buffer." << std::endl;
 		return;
@@ -145,6 +150,9 @@ void DDWAudio::Initialize()
 void DDWAudio::SelectAudioDevice(int index)
 {
 	m_pCurrentAudioDevice = m_pAudioDevices[index];
+
+	//Re-initialize the system
+	Initialize(index);
 }
 
 std::string DDWAudio::GetFullDescription(LPGUID guid, LPCSTR desc)

@@ -13,22 +13,22 @@ public:
 	{
 		//The "RIFF" chunk descriptor
 		char chunkID[4];
-		unsigned int chunkSize;
+		unsigned long chunkSize;
 		char fileFormat[4];
 
 		//The "fmt" sub-chunk
 		char subChunkID[4];
-		unsigned int subChunkSize;
+		unsigned long subChunkSize;
 		unsigned short audioFormat;
 		unsigned short numChannels;
-		unsigned int sampleRate;
-		unsigned int bytesPerSecond;
+		unsigned long sampleRate;
+		unsigned long bytesPerSecond;
 		unsigned short blockAlign;
 		unsigned short bitsPerSample;
 
 		//The data sub-chunk
 		char dataChunkID[4];
-		unsigned int dataSize;
+		unsigned long dataSize;
 	};
 
 	//Ctor
@@ -44,7 +44,6 @@ public:
 	bool LoadAudioFile(const std::string& filename, LPDIRECTSOUNDBUFFER* soundBuffer);
 
 private:
-
 	//Helper functions
 	std::string GetFileExtension(const std::string& filename);
 

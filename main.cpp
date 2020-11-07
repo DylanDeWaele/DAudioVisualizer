@@ -6,36 +6,44 @@
 
 int main()
 {
-	DDWAudio* pAudioEngine = new DDWAudio{};
-
 	std::cout << std::endl;
 
 	//Get the audio devices
-	pAudioEngine->Initialize();
+	DDWAudio::GetInstance().Initialize();
 
 	std::cout << std::endl;
 
 	//Print to see available devices
-	pAudioEngine->PrintAudioDevices();
+	DDWAudio::GetInstance().PrintAudioDevices();
 
 	std::cout << std::endl;
 
 	//Select a device
-	pAudioEngine->SelectAudioDevice(1);
+	DDWAudio::GetInstance().SelectAudioDevice(1);
 
+	std::cout << std::endl;
+	
 	//Print the current device
-	pAudioEngine->PrintCurrentAudioDevice();
-
-	//Play the primary sound buffer
-	pAudioEngine->GetPrimarySoundBuffer()->Play(0, 0, DSBPLAY_LOOPING);
+	DDWAudio::GetInstance().PrintCurrentAudioDevice();
 
 	std::cout << std::endl;
 
-	DDWMasterParser::GetInstance().LoadAudioFile("Trunk.wav", nullptr);
+	LPDIRECTSOUNDBUFFER secondaryBuffer = nullptr;
+
+	DDWMasterParser::GetInstance().LoadAudioFile("Trunk.wav", &secondaryBuffer);
+
+	//Play the buffer
+	secondaryBuffer->SetCurrentPosition(0);
+	secondaryBuffer->SetVolume(DSBVOLUME_MAX);
+	secondaryBuffer->Play(0, 0, 0);
+
+	while (true)
+	{
+	}
+
+	secondaryBuffer->Release();
 
 	std::cout << std::endl;
-
-	delete pAudioEngine;
 
 	return 1;
 }
