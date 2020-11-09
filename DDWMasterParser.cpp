@@ -27,11 +27,9 @@ std::string DDWMasterParser::GetFileExtension(const std::string& filename)
 	//Find the position of the last dot in the filename
 	const size_t& dotPos = filename.find_last_of('.');
 
-	//Return the extension
 	if (dotPos != std::string::npos)
 		return filename.substr(dotPos + 1);
 
-	//If not found return empty string
 	return "";
 }
 

@@ -12,13 +12,11 @@ BOOL CALLBACK EnumCallback(LPGUID guid, LPCSTR desc, LPCSTR mod, LPVOID list)
 		device->guid = guid;
 
 	device->description = DDWAudio::GetFullDescription(guid, desc);
-	//Fill in the description of the primary sound device
 	if (device->description.empty())
 		device->description = "Primary Audio Device";
 
 	device->module = DDWAudio::GetFullModule(guid, mod);
 
-	//Add the device to the list
 	(static_cast<std::vector<DDWAudio::Device*>*>(list))->push_back(device);
 	return true;
 }
@@ -34,7 +32,6 @@ DDWAudio::DDWAudio()
 
 DDWAudio::~DDWAudio()
 {
-	//Delete all audio devices
 	for (auto d : m_pAudioDevices)
 	{
 		delete d;
@@ -60,7 +57,6 @@ LPDIRECTSOUNDBUFFER DDWAudio::GetPrimarySoundBuffer() const
 
 void DDWAudio::PrintAudioDevices() const
 {
-	//Show the available audio devices
 	std::cout << "Available Audio Devices: " << std::endl;
 	std::cout << "------------------------ " << std::endl;
 
@@ -94,10 +90,8 @@ void DDWAudio::Initialize(int index)
 		return;
 	}
 
-	//The current audio device is the primary one by default
 	m_pCurrentAudioDevice = m_pAudioDevices[index];
 
-	//Create direct sound object
 	hr = DirectSoundCreate(m_pCurrentAudioDevice->guid, &m_pDirectSound, nullptr);
 
 	if (FAILED(hr))
@@ -106,7 +100,6 @@ void DDWAudio::Initialize(int index)
 		return;
 	}
 
-	//Set the cooperative level
 	hr = m_pDirectSound->SetCooperativeLevel(GetDesktopWindow(), DSSCL_NORMAL); //I suppose I need to change this to the window handle?
 
 	if (FAILED(hr))
@@ -115,7 +108,6 @@ void DDWAudio::Initialize(int index)
 		return;
 	}
 
-	//Create primary buffer descriptions
 	DSBUFFERDESC bufferDesc{};
 	WAVEFORMATEX waveFormat{};
 
@@ -127,11 +119,10 @@ void DDWAudio::Initialize(int index)
 	waveFormat.wFormatTag = WAVE_FORMAT_PCM; //Pulse code modulation format
 	waveFormat.nChannels = 2; //Stereo
 	waveFormat.nSamplesPerSec = 44100; //44100 Hz
-	waveFormat.wBitsPerSample = 16; //At 16 bits per same
+	waveFormat.wBitsPerSample = 16; //At 16 bits per sample
 	waveFormat.nBlockAlign = 4; // From documentation: {If wFormatTag is WAVE_FORMAT_PCM, nBlockAlign should be equal to the product of nChannels and wBitsPerSample divided by 8 (bits per byte).} => ((2*16) / 8 = 4)
 	waveFormat.nAvgBytesPerSec = 176400; //From documentation: { If wFormatTag is WAVE_FORMAT_PCM, nAvgBytesPerSec should be equal to the product of nSamplesPerSec and nBlockAlign.} => (44100 * 4 = 176400)
 
-	//Create the primary buffer
 	hr = m_pDirectSound->CreateSoundBuffer(&bufferDesc, &m_pPrimarySoundBuffer, nullptr);
 
 	if (FAILED(hr))
@@ -140,10 +131,8 @@ void DDWAudio::Initialize(int index)
 		return;
 	}
 
-	//Set buffer format
 	m_pPrimarySoundBuffer->SetFormat(&waveFormat);
 
-	//Success!
 	std::cout << "Successfully created and initialized the DAudio engine!" << std::endl;
 }
 

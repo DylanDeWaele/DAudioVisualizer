@@ -31,23 +31,17 @@ public:
 		unsigned long dataSize;
 	};
 
-	//Ctor
 	DDWMasterParser() = default;
 
-	//Dtor
 	~DDWMasterParser() = default;
 
-	//Singleton pattern
 	static DDWMasterParser& GetInstance();
 
-	//Public member functions
 	bool LoadAudioFile(const std::string& filename, LPDIRECTSOUNDBUFFER* soundBuffer);
 
 private:
-	//Helper functions
 	std::string GetFileExtension(const std::string& filename);
 
-	//WAV functions
 	bool LoadWAVFile(const std::string& filename, LPDIRECTSOUNDBUFFER* soundBuffer);
 	bool VerifyWAVFileIntegrity(std::ifstream& file, WAVFileFormat& wavFile);
 	bool CreateWAVFileSoundBuffer(std::ifstream& file, const WAVFileFormat& wavFile, LPDIRECTSOUNDBUFFER* soundBuffer);

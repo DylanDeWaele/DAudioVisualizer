@@ -16,16 +16,12 @@ public:
 		std::string description;
 		std::string module;
 
-		//Ctor
 		Device() : guid{ nullptr }, description{  }, module{  } { }
-		//Dtor
 		~Device() { guid = nullptr; }
 	};
 
-	//Ctor
 	DDWAudio();
 
-	//Dtor
 	~DDWAudio();
 
 	//Rule of 5
@@ -34,13 +30,11 @@ public:
 	DDWAudio& operator=(const DDWAudio& other) = delete; //Copy assignment
 	DDWAudio& operator=(DDWAudio&& other) = delete; //Move assignment
 
-	//Public member functions
 	void Initialize(int index = 0);
 
 	//This functions sets the current audio device to the audio device at the given index
 	void SelectAudioDevice(int index);
 
-	//Gets the current active audio device
 	Device* GetCurrentAudioDevice() const;
 	LPDIRECTSOUND GetDirectSound() const;
 	LPDIRECTSOUNDBUFFER GetPrimarySoundBuffer() const;
@@ -48,7 +42,6 @@ public:
 	void PrintAudioDevices() const;
 	void PrintCurrentAudioDevice() const;
 
-	//Singleton pattern
 	static DDWAudio& GetInstance();
 
 	//Using static functions so we can access them inside the CALLBACK function
@@ -56,7 +49,6 @@ public:
 	static std::string GetFullModule(LPGUID guid, LPCSTR mod); //Get full module of audio device
 
 private:
-	//Private data members
 	std::vector<Device*> m_pAudioDevices;
 	Device* m_pCurrentAudioDevice;
 

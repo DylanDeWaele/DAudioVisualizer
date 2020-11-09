@@ -22,6 +22,9 @@
     <ClCompile Include="DDWMasterParser.cpp">
       <Filter>Parsers</Filter>
     </ClCompile>
+    <ClCompile Include="DDWSound.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DDWAudio.h">
@@ -29,6 +32,9 @@
     </ClInclude>
     <ClInclude Include="DDWMasterParser.h">
       <Filter>Parsers</Filter>
+    </ClInclude>
+    <ClInclude Include="DDWSound.h">
+      <Filter>Audio</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

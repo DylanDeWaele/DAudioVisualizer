@@ -1,49 +1,40 @@
+#include <SFML/Graphics.hpp>
 #include <vld.h>
 #include <DSound.h>
 
 #include "DDWAudio.h"
 #include "DDWMasterParser.h"
+#include "DDWSound.h"
 
 int main()
 {
-	std::cout << std::endl;
+	//Create SFML window
+	sf::RenderWindow window(sf::VideoMode(800, 600), "DAudioVisualizer");
 
-	//Get the audio devices
+	//Initialize Audio
 	DDWAudio::GetInstance().Initialize();
 
-	std::cout << std::endl;
+	//Create a sound
+	DDWSound sound{ "Trunk.wav" };
+	sound.Play();
 
-	//Print to see available devices
-	DDWAudio::GetInstance().PrintAudioDevices();
-
-	std::cout << std::endl;
-
-	//Select a device
-	DDWAudio::GetInstance().SelectAudioDevice(1);
-
-	std::cout << std::endl;
-	
-	//Print the current device
-	DDWAudio::GetInstance().PrintCurrentAudioDevice();
-
-	std::cout << std::endl;
-
-	LPDIRECTSOUNDBUFFER secondaryBuffer = nullptr;
-
-	DDWMasterParser::GetInstance().LoadAudioFile("Trunk.wav", &secondaryBuffer);
-
-	//Play the buffer
-	secondaryBuffer->SetCurrentPosition(0);
-	secondaryBuffer->SetVolume(DSBVOLUME_MAX);
-	secondaryBuffer->Play(0, 0, 0);
-
-	while (true)
+	//Game loop
+	while (window.isOpen())
 	{
+		//Poll input events
+		sf::Event event;
+		while (window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+				window.close();
+		}
+
+		//Draw loop
+		{
+			window.clear();
+			window.display();
+		}
 	}
-
-	secondaryBuffer->Release();
-
-	std::cout << std::endl;
 
 	return 1;
 }

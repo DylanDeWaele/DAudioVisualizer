@@ -1,5 +1,6 @@
 ﻿  DDWAudio.cpp
   DDWMasterParser.cpp
+  DDWSound.cpp
   main.cpp
   Generating Code...
   DAudioVisualizer.vcxproj -> D:\Documenten\Audio\Projects\AudioVisualizer\DAudioVisualizer\Debug\DAudioVisualizer.exe
