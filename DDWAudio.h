@@ -10,15 +10,6 @@
 class DDWAudio
 {
 public:
-	struct Device
-	{
-		LPGUID guid;
-		std::string description;
-		std::string module;
-
-		Device() : guid{ nullptr }, description{  }, module{  } { }
-		~Device() { guid = nullptr; }
-	};
 
 	DDWAudio();
 
@@ -35,24 +26,10 @@ public:
 	//This functions sets the current audio device to the audio device at the given index
 	void SelectAudioDevice(int index);
 
-	Device* GetCurrentAudioDevice() const;
-	LPDIRECTSOUND GetDirectSound() const;
-	LPDIRECTSOUNDBUFFER GetPrimarySoundBuffer() const;
-
 	void PrintAudioDevices() const;
 	void PrintCurrentAudioDevice() const;
 
 	static DDWAudio& GetInstance();
 
-	//Using static functions so we can access them inside the CALLBACK function
-	static std::string GetFullDescription(LPGUID guid, LPCSTR desc); //Get full description of audio device
-	static std::string GetFullModule(LPGUID guid, LPCSTR mod); //Get full module of audio device
-
 private:
-	std::vector<Device*> m_pAudioDevices;
-	Device* m_pCurrentAudioDevice;
-
-	LPDIRECTSOUND m_pDirectSound;
-
-	LPDIRECTSOUNDBUFFER m_pPrimarySoundBuffer;
 };

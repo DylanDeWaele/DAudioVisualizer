@@ -1,6 +1,13 @@
 ﻿  DDWAudio.cpp
+D:\Documenten\Audio\Projects\AudioVisualizer\DAudioVisualizer\DDWAudio.cpp(36,31): warning C4100: 'index': unreferenced formal parameter
   DDWMasterParser.cpp
+D:\Documenten\Audio\Projects\AudioVisualizer\DAudioVisualizer\DDWMasterParser.cpp(137,113): warning C4100: 'soundBuffer': unreferenced formal parameter
+D:\Documenten\Audio\Projects\AudioVisualizer\DAudioVisualizer\DDWMasterParser.cpp(137,90): warning C4100: 'wavFile': unreferenced formal parameter
+D:\Documenten\Audio\Projects\AudioVisualizer\DAudioVisualizer\DDWMasterParser.cpp(137,63): warning C4100: 'file': unreferenced formal parameter
   DDWSound.cpp
+D:\Documenten\Audio\Projects\AudioVisualizer\DAudioVisualizer\DDWSound.cpp(32,32): warning C4100: 'volume': unreferenced formal parameter
+D:\Documenten\Audio\Projects\AudioVisualizer\DAudioVisualizer\DDWSound.cpp(38,32): warning C4100: 'position': unreferenced formal parameter
+D:\Documenten\Audio\Projects\AudioVisualizer\DAudioVisualizer\DDWSound.cpp(43,45): warning C4100: 'filename': unreferenced formal parameter
   main.cpp
   Generating Code...
   DAudioVisualizer.vcxproj -> D:\Documenten\Audio\Projects\AudioVisualizer\DAudioVisualizer\Debug\DAudioVisualizer.exe

@@ -8,7 +8,7 @@ DDWMasterParser& DDWMasterParser::GetInstance()
 	return instance;
 }
 
-bool DDWMasterParser::LoadAudioFile(const std::string& filename, LPDIRECTSOUNDBUFFER* soundBuffer)
+bool DDWMasterParser::LoadAudioFile(const std::string& filename, signed short* soundBuffer)
 {
 	std::string extension{};
 
@@ -34,7 +34,7 @@ std::string DDWMasterParser::GetFileExtension(const std::string& filename)
 }
 
 //This function loads in a WAV file and copies its data into the given buffer
-bool DDWMasterParser::LoadWAVFile(const std::string& filename, LPDIRECTSOUNDBUFFER* soundBuffer)
+bool DDWMasterParser::LoadWAVFile(const std::string& filename, signed short* soundBuffer)
 {
 	std::ifstream file{};
 	WAVFileFormat wavFile{};
@@ -134,80 +134,8 @@ bool DDWMasterParser::VerifyWAVFileIntegrity(std::ifstream& file, WAVFileFormat&
 	return true;
 }
 
-bool DDWMasterParser::CreateWAVFileSoundBuffer(std::ifstream& file, const WAVFileFormat& wavFile, LPDIRECTSOUNDBUFFER* soundBuffer)
+bool DDWMasterParser::CreateWAVFileSoundBuffer(std::ifstream& file, const WAVFileFormat& wavFile, signed short* soundBuffer)
 {
-	HRESULT hr{};
-	WAVEFORMATEX waveFormat{};
-	DSBUFFERDESC bufferDesc{};
-	LPDIRECTSOUNDBUFFER tempBuffer = nullptr;
-	unsigned char* waveData = nullptr;
-	unsigned char* bufferPtr = nullptr;
-	unsigned long bufferSize{};
-
-	//1. FIll in the wave format of the secondary buffer
-	waveFormat.wFormatTag = wavFile.audioFormat;
-	waveFormat.nSamplesPerSec = wavFile.sampleRate;
-	waveFormat.wBitsPerSample = wavFile.bitsPerSample;
-	waveFormat.nChannels = wavFile.numChannels;
-	waveFormat.nBlockAlign = wavFile.blockAlign;
-	waveFormat.nAvgBytesPerSec = wavFile.bytesPerSecond;
-	waveFormat.cbSize = 0;
-
-	//2. Fill in the buffer description of the secondary buffer
-	bufferDesc.dwSize = sizeof(DSBUFFERDESC);
-	bufferDesc.dwFlags = DSBCAPS_CTRLVOLUME;
-	bufferDesc.dwBufferBytes = wavFile.dataSize;
-	bufferDesc.dwReserved = 0;
-	bufferDesc.lpwfxFormat = &waveFormat;
-	bufferDesc.guid3DAlgorithm = GUID_NULL;
-
-	//3. Create a temporary buffer, if this succeeds then we use this temporary buffer to create the secondary buffer
-	hr = DDWAudio::GetInstance().GetDirectSound()->CreateSoundBuffer(&bufferDesc, &tempBuffer, nullptr);
-	if (FAILED(hr))
-		return false;
-
-	//4. Test the buffer format against the direct sound interface and create the secondary buffer
-	hr = tempBuffer->QueryInterface(IID_IDirectSoundBuffer, (void**)&*soundBuffer);
-	if (FAILED(hr))
-		return false;
-
-	//5. Release the temp buffer
-	tempBuffer->Release();
-
-	//6. Start reading in the wav file contents (at offset 44)
-	file.seekg(44);
-
-	//7. Create a temporary buffer to hold the contents
-	waveData = new unsigned char[wavFile.dataSize]{};
-	if (!waveData)
-		return false;
-
-	//8. Read the content of the wave file into the buffer
-	file.read((char*)waveData, wavFile.dataSize);
-
-	//9. Close the file once done reading
-	file.close();
-	if (file.is_open())
-		return false;
-
-	//10. Lock the secondary buffer and write wave data into it
-	hr = (*soundBuffer)->Lock(0, wavFile.dataSize, (void**)&bufferPtr, (DWORD*)&bufferSize, nullptr, nullptr, 0);
-	if (FAILED(hr))
-		return false;
-
-	if (bufferSize != wavFile.dataSize)
-		return false;
-
-	//11. Copy the data into the buffer
-	memcpy(bufferPtr, waveData, wavFile.dataSize);
-
-	//12. Unlock the secondary buffer
-	hr = (*soundBuffer)->Unlock((void*)bufferPtr, bufferSize, nullptr, 0);
-	if (FAILED(hr))
-		return false;
-
-	//13. Release the wave data since it was copied into the secondary buffer
-	delete[] waveData;
 
 	return true;
 }

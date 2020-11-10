@@ -29,6 +29,7 @@ public:
 		//The data sub-chunk
 		char dataChunkID[4];
 		unsigned long dataSize;
+		signed short* pData;
 	};
 
 	DDWMasterParser() = default;
@@ -37,13 +38,13 @@ public:
 
 	static DDWMasterParser& GetInstance();
 
-	bool LoadAudioFile(const std::string& filename, LPDIRECTSOUNDBUFFER* soundBuffer);
+	bool LoadAudioFile(const std::string& filename, signed short* soundBuffer);
 
 private:
 	std::string GetFileExtension(const std::string& filename);
 
-	bool LoadWAVFile(const std::string& filename, LPDIRECTSOUNDBUFFER* soundBuffer);
+	bool LoadWAVFile(const std::string& filename, signed short* soundBuffer);
 	bool VerifyWAVFileIntegrity(std::ifstream& file, WAVFileFormat& wavFile);
-	bool CreateWAVFileSoundBuffer(std::ifstream& file, const WAVFileFormat& wavFile, LPDIRECTSOUNDBUFFER* soundBuffer);
+	bool CreateWAVFileSoundBuffer(std::ifstream& file, const WAVFileFormat& wavFile, signed short* soundBuffer);
 };
 

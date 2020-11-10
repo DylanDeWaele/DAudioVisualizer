@@ -12,12 +12,11 @@ public:
 	bool Play();
 	bool Stop();
 
-	bool SetVolume(LONG volume);
-	bool SetPosition(DWORD position);
+	bool SetVolume(float volume);
+	bool SetPosition(int position);
 
 private:
 	const std::string m_Filename;
-	LPDIRECTSOUNDBUFFER m_pSoundBuffer;
 
 	void LoadSound(const std::string& filename);
 };
