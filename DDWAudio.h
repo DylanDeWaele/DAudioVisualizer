@@ -1,11 +1,10 @@
 #pragma once
-#include <iostream>
 #include <string>
-#include <Dsound.h>
 #include <vector>
+#include <SDL.h>
 
-//DOCUMENTATION:
-//https://edn.embarcadero.com/article/20941
+//Documentation
+//https://wiki.libsdl.org/SDL_GetNumAudioDevices
 
 class DDWAudio
 {
@@ -15,21 +14,27 @@ public:
 
 	~DDWAudio();
 
-	//Rule of 5
-	DDWAudio(const DDWAudio& other) = delete; //Copy constructor
-	DDWAudio(DDWAudio&& other) = delete; //Move constructor
-	DDWAudio& operator=(const DDWAudio& other) = delete; //Copy assignment
-	DDWAudio& operator=(DDWAudio&& other) = delete; //Move assignment
+	DDWAudio(const DDWAudio& other) = delete;
+	DDWAudio(DDWAudio&& other) = delete;
+	DDWAudio& operator=(const DDWAudio& other) = delete;
+	DDWAudio& operator=(DDWAudio&& other) = delete;
 
-	void Initialize(int index = 0);
-
-	//This functions sets the current audio device to the audio device at the given index
-	void SelectAudioDevice(int index);
+	void Initialize();
 
 	void PrintAudioDevices() const;
 	void PrintCurrentAudioDevice() const;
 
 	static DDWAudio& GetInstance();
 
+	void SetBuffer(Uint8* pBuffer);
+	void SetLength(Uint32 length);
+
+	Uint8* GetCurrentBuffer() const;
+	Uint32 GetCurrentLength() const;
+
 private:
+	int m_AmountOfAudioDevices;
+
+	Uint8* m_pCurrentSoundBuffer;
+	Uint32 m_CurrentSoundLength;
 };

@@ -1,0 +1,8 @@
+﻿  DDWAudio.cpp
+  DDWSound.cpp
+  main.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 103 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  DAudioVisualizer.vcxproj -> D:\Documenten\Audio\Projects\AudioVisualizer\DAudioVisualizer\x64\Release\DAudioVisualizer.exe

@@ -8,8 +8,8 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Parsers">
-      <UniqueIdentifier>{36ca24b5-bbbe-4a09-aa82-84cf8227e138}</UniqueIdentifier>
+    <Filter Include="GUI">
+      <UniqueIdentifier>{47c0df12-77e9-41e4-afff-bed2c9a83477}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -19,22 +19,22 @@
     <ClCompile Include="DDWAudio.cpp">
       <Filter>Audio</Filter>
     </ClCompile>
-    <ClCompile Include="DDWMasterParser.cpp">
-      <Filter>Parsers</Filter>
-    </ClCompile>
     <ClCompile Include="DDWSound.cpp">
       <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="DDWGraphics.cpp">
+      <Filter>GUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DDWAudio.h">
       <Filter>Audio</Filter>
     </ClInclude>
-    <ClInclude Include="DDWMasterParser.h">
-      <Filter>Parsers</Filter>
-    </ClInclude>
     <ClInclude Include="DDWSound.h">
       <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="DDWGraphics.h">
+      <Filter>GUI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,5 +1,5 @@
 #pragma once
-#include <DSound.h>
+#include <SDL.h>
 #include <string>
 
 class DDWSound
@@ -9,14 +9,17 @@ public:
 
 	~DDWSound();
 
-	bool Play();
-	bool Stop();
+	void Play();
+	void Stop();
 
-	bool SetVolume(float volume);
-	bool SetPosition(int position);
+	Uint32 GetLength() const;
+	Uint8* GetBuffer() const;
 
 private:
 	const std::string m_Filename;
+	Uint32 m_Length;
+	Uint8* m_pBuffer;
+	SDL_AudioSpec m_Specs;
 
 	void LoadSound(const std::string& filename);
 };
