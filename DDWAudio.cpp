@@ -1,35 +1,44 @@
 #include "DDWAudio.h"
 #include <iostream>
+#include "DDWChannel.h"
+
+FMOD_RESULT F_CALLBACK WriteSoundData(FMOD_SOUND*, void* pData, unsigned int length)
+{
+	//Clear output
+	memset(pData, 0, length);
+
+	signed short* pPCMData = (signed short*)pData;
+
+	int pcmDataCount = length / 2;
+
+	const unsigned int amountOfChannels = DDWAudio::GetInstance().GetAmountOfChannels();
+	const std::vector<DDWChannel*>& pChannels = DDWAudio::GetInstance().GetChannels();
+
+	//Tell every channel to write to the output
+	for (unsigned int i = 0; i < amountOfChannels; i++)
+	{
+		pChannels[i]->WriteSoundData(pPCMData, pcmDataCount);
+	}
+
+	return FMOD_OK;
+}
 
 DDWAudio::DDWAudio()
-	: m_AmountOfAudioDevices{},
-	m_pCurrentSoundBuffer{nullptr},
-	m_CurrentSoundLength{}
+	: m_pSystem{ nullptr },
+	m_pSound{nullptr},
+	m_SoundInfo{},
+	m_AmountOfChannels{ 2 }, //2 Channels
+	m_pChannels{ }
 {
 }
 
 DDWAudio::~DDWAudio()
 {
-	SDL_CloseAudio();
-}
+	m_pSystem->release();
 
-void DDWAudio::PrintAudioDevices() const
-{
-	std::cout << "Available Audio Devices: " << std::endl;
-	std::cout << "------------------------ " << std::endl;
-
-	for (int i = 0; i < m_AmountOfAudioDevices; ++i) 
-	{
-		std::cout << i << ": " << SDL_GetAudioDeviceName(i, 0) << std::endl;
-	}
-}
-
-void DDWAudio::PrintCurrentAudioDevice() const
-{
-	std::cout << "Current Audio Device: " << std::endl;
-	std::cout << "--------------------- " << std::endl;
-
-	std::cout << SDL_GetCurrentAudioDriver() << std::endl;
+	//Delete all channels
+	for (DDWChannel* pChannel : m_pChannels)
+		delete pChannel;
 }
 
 DDWAudio& DDWAudio::GetInstance()
@@ -38,33 +47,62 @@ DDWAudio& DDWAudio::GetInstance()
 	return instance;
 }
 
-void DDWAudio::SetBuffer(Uint8* pBuffer)
-{
-	m_pCurrentSoundBuffer = pBuffer;
-}
-
-void DDWAudio::SetLength(Uint32 length)
-{
-	m_CurrentSoundLength = length;
-}
-
-Uint8* DDWAudio::GetCurrentBuffer() const
-{
-	return m_pCurrentSoundBuffer;
-}
-
-Uint32 DDWAudio::GetCurrentLength() const
-{
-	return m_CurrentSoundLength;
-}
-
 void DDWAudio::Initialize()
 {
-	// Initialize SDL.
-	if (SDL_Init(SDL_INIT_AUDIO) < 0)
+	FMOD_RESULT fr = FMOD::System_Create(&m_pSystem);
+
+	if (fr != FMOD_OK)
+	{
+		std::cout << "Failed to create FMOD system." << std::endl;
 		return;
+	}
 
-	m_AmountOfAudioDevices = SDL_GetNumAudioDevices(0);
+	fr = m_pSystem->init(m_AmountOfChannels, FMOD_INIT_NORMAL, nullptr);
 
-	std::cout << "Successfully created and initialized the DAudio engine!" << std::endl;
+	if (fr != FMOD_OK)
+	{
+		std::cout << "Failed to initialize FMOD system." << std::endl;
+		return;
+	}
+
+	std::cout << "Successfully initialized FMOD system!" << std::endl;
+
+	//Create vector of channels
+	for (unsigned int i = 0; i < m_AmountOfChannels; i++)
+	{
+		m_pChannels.push_back(new DDWChannel{});
+	}
+
+	//Initialize looping sound
+	memset(&m_SoundInfo, 0, sizeof(FMOD_CREATESOUNDEXINFO));
+	m_SoundInfo.cbsize = sizeof(FMOD_CREATESOUNDEXINFO);
+
+	m_SoundInfo.defaultfrequency = 44100;
+	m_SoundInfo.format = FMOD_SOUND_FORMAT_PCM16;
+	m_SoundInfo.numchannels = 2;
+
+	m_SoundInfo.length = 44100 * 2 * sizeof(signed short) * 100; //100 second sound
+	m_SoundInfo.decodebuffersize = 4410;
+
+	m_SoundInfo.pcmreadcallback = WriteSoundData;
+
+	//Create a looping sound
+	FMOD_MODE mode = FMOD_LOOP_NORMAL | FMOD_OPENUSER;
+	m_pSystem->createStream(nullptr, mode, &m_SoundInfo, &m_pSound);
+	m_pSystem->playSound(m_pSound, nullptr, false, nullptr);
+}
+
+void DDWAudio::Update()
+{
+	m_pSystem->update();
+}
+
+int DDWAudio::GetAmountOfChannels() const
+{
+	return m_AmountOfChannels;
+}
+
+const std::vector<DDWChannel*>& DDWAudio::GetChannels() const
+{
+	return m_pChannels;
 }

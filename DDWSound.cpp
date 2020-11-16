@@ -3,86 +3,51 @@
 
 #include "DDWAudio.h"
 
-//https://gist.github.com/armornick/3447121
-
-void AudioCallback(void*, Uint8* pStream, int length)
-{
-	DDWAudio& audioEngine = DDWAudio::GetInstance();
-	Uint32 currentLength = audioEngine.GetCurrentLength();
-	Uint8* pCurrentSoundBuffer = audioEngine.GetCurrentBuffer();
-
-	if (audioEngine.GetCurrentLength() <= 0)
-		return;
-
-	if ((unsigned int)length > currentLength)
-		length = currentLength;
-
-	//SDL_MixAudio(pStream, pCurrentSoundBuffer, length, SDL_MIX_MAXVOLUME); //This gives me weird jittery sound behaviour
-	SDL_memcpy (pStream, pCurrentSoundBuffer, length);
-
-	pCurrentSoundBuffer += length; //Increment the position of the current sound buffer
-	currentLength -= length;
-
-	audioEngine.SetBuffer(pCurrentSoundBuffer);
-	audioEngine.SetLength(currentLength);
-}
 
 DDWSound::DDWSound(const std::string& filename)
 	: m_Filename{ filename },
-	m_Length{},
-	m_pBuffer{ nullptr },
-	m_Specs{}
+	m_DataType{},
+	m_WAVData{}
 {
 	LoadSound(filename);
 }
 
 DDWSound::~DDWSound()
 {
-	SDL_FreeWAV(m_pBuffer);
+
 }
 
-void DDWSound::Play()
+
+WAVFileFormat DDWSound::GetData() const
 {
-	if (SDL_OpenAudio(&m_Specs, nullptr) < 0)
-	{
-		std::cout << "Couldn't open audio: " << SDL_GetError() << std::endl;
-		return;
-	}
-
-	SDL_PauseAudio(0);
-
-	std::cout << "Now playing: " << m_Filename << std::endl;
+	return m_WAVData;
 }
 
-void DDWSound::Stop()
-{
-	SDL_PauseAudio(1);
-}
-
-Uint32 DDWSound::GetLength() const
-{
-	return m_Length;
-}
-
-Uint8* DDWSound::GetBuffer() const
-{
-	return m_pBuffer;
-}
 
 void DDWSound::LoadSound(const std::string& filename)
 {
-	if (!SDL_LoadWAV(filename.c_str(), &m_Specs, &m_pBuffer, &m_Length))
+	std::string extension{};
+
+	//1. Find the filenames extension
+	extension = GetFileExtension(filename);
+
+	//2. Check the extension and load the corresponding parser function
+	if (extension == "wav") 
 	{
-		std::cout << "Failed to load: " << filename << std::endl;
-		return;
+		m_DataType = DataType::WAV;
+
+		if (!DDWMasterParser::GetInstance().LoadWAVFile(filename, m_WAVData))
+			std::cout << "Error loading " << filename << std::endl;
 	}
+}
 
-	//Set the callback
-	m_Specs.callback = AudioCallback;
-	m_Specs.userdata = nullptr;
+std::string DDWSound::GetFileExtension(const std::string& filename)
+{
+	//Find the position of the last dot in the filename
+	const size_t& dotPos = filename.find_last_of('.');
 
-	DDWAudio::GetInstance().SetBuffer(m_pBuffer);
-	DDWAudio::GetInstance().SetLength(m_Length);
+	if (dotPos != std::string::npos)
+		return filename.substr(dotPos + 1);
 
-	std::cout << "Successfully loaded " << filename << std::endl;
+	return "";
 }

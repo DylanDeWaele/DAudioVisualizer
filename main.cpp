@@ -5,6 +5,7 @@
 #include "DDWAudio.h"
 #include "DDWGraphics.h"
 #include "DDWSound.h"
+#include "DDWChannel.h"
 
 #undef main
 
@@ -12,14 +13,13 @@ int main()
 {
 	//Initialize Audio engine
 	DDWAudio::GetInstance().Initialize();
-	DDWAudio::GetInstance().PrintAudioDevices();
 
 	//Initialize Graphics engine
 	DDWGraphics::GetInstance().Initialize();
 
 	//Play sound
-	DDWSound satan{ "Trunk.wav" };
-	satan.Play();
+	DDWSound* pSound = new DDWSound{ "Trunk.wav" };
+	DDWAudio::GetInstance().GetChannels()[0]->Play(pSound);
 
 	//Game loop
 	bool quit = false;

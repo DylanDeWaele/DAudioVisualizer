@@ -1,10 +1,9 @@
 #pragma once
 #include <string>
 #include <vector>
-#include <SDL.h>
+#include <fmod.hpp>
 
-//Documentation
-//https://wiki.libsdl.org/SDL_GetNumAudioDevices
+class DDWChannel;
 
 class DDWAudio
 {
@@ -20,21 +19,21 @@ public:
 	DDWAudio& operator=(DDWAudio&& other) = delete;
 
 	void Initialize();
-
-	void PrintAudioDevices() const;
-	void PrintCurrentAudioDevice() const;
+	void Update();
 
 	static DDWAudio& GetInstance();
 
-	void SetBuffer(Uint8* pBuffer);
-	void SetLength(Uint32 length);
-
-	Uint8* GetCurrentBuffer() const;
-	Uint32 GetCurrentLength() const;
+	int GetAmountOfChannels() const;
+	const std::vector<DDWChannel*>& GetChannels() const;
 
 private:
-	int m_AmountOfAudioDevices;
+	FMOD::System* m_pSystem;
 
-	Uint8* m_pCurrentSoundBuffer;
-	Uint32 m_CurrentSoundLength;
+	//Variables to create the looping stream we will write data into
+	FMOD_CREATESOUNDEXINFO m_SoundInfo;
+	FMOD::Sound* m_pSound;
+	
+	//Available channels
+	const unsigned int m_AmountOfChannels;
+	std::vector<DDWChannel*> m_pChannels;
 };

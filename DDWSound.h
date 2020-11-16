@@ -1,26 +1,32 @@
 #pragma once
-#include <SDL.h>
 #include <string>
+
+#include "Structs.h"
+#include "DDWMasterParser.h"
+
 
 class DDWSound
 {
 public:
+	enum class DataType 
+	{
+		None,
+		WAV
+	};
+
 	DDWSound(const std::string& filename);
 
 	~DDWSound();
 
-	void Play();
-	void Stop();
-
-	Uint32 GetLength() const;
-	Uint8* GetBuffer() const;
+	WAVFileFormat GetData() const;
 
 private:
 	const std::string m_Filename;
-	Uint32 m_Length;
-	Uint8* m_pBuffer;
-	SDL_AudioSpec m_Specs;
+	DataType m_DataType;
+
+	//Depending on the data type, we have to fill in 1 of the below structs 
+	WAVFileFormat m_WAVData; //Contains all data from the wav file like sampling rate, number of channels etc.
 
 	void LoadSound(const std::string& filename);
+	std::string GetFileExtension(const std::string& filename);
 };
-
