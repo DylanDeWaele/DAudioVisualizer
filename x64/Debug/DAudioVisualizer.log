@@ -1,4 +1,7 @@
 ﻿  DDWAudio.cpp
+  DDWChannel.cpp
+  DDWGraphics.cpp
+  DDWMasterParser.cpp
   DDWSound.cpp
   main.cpp
   Generating Code...

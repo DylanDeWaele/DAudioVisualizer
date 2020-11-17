@@ -10,7 +10,6 @@ class DDWAudio
 public:
 
 	DDWAudio();
-
 	~DDWAudio();
 
 	DDWAudio(const DDWAudio& other) = delete;
@@ -26,6 +25,8 @@ public:
 	int GetAmountOfChannels() const;
 	const std::vector<DDWChannel*>& GetChannels() const;
 
+	DDWChannel* GetFreeChannel() const;
+
 private:
 	FMOD::System* m_pSystem;
 
@@ -33,7 +34,6 @@ private:
 	FMOD_CREATESOUNDEXINFO m_SoundInfo;
 	FMOD::Sound* m_pSound;
 	
-	//Available channels
 	const unsigned int m_AmountOfChannels;
 	std::vector<DDWChannel*> m_pChannels;
 };

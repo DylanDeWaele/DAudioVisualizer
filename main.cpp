@@ -13,13 +13,13 @@ int main()
 {
 	//Initialize Audio engine
 	DDWAudio::GetInstance().Initialize();
-
+	
 	//Initialize Graphics engine
 	DDWGraphics::GetInstance().Initialize();
 
 	//Play sound
 	DDWSound* pSound = new DDWSound{ "Trunk.wav" };
-	DDWAudio::GetInstance().GetChannels()[0]->Play(pSound);
+	pSound->Play();	
 
 	//Game loop
 	bool quit = false;
@@ -38,11 +38,14 @@ int main()
 			}
 
 			//Update
+			DDWAudio::GetInstance().Update();
 
 			//Draw
 			SDL_UpdateWindowSurface(pWindow);
 		}
 	}
+
+	delete pSound;
 
 	return 1;
 }

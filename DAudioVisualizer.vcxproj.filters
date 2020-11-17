@@ -12,10 +12,10 @@
       <UniqueIdentifier>{47c0df12-77e9-41e4-afff-bed2c9a83477}</UniqueIdentifier>
     </Filter>
     <Filter Include="Parser">
-      <UniqueIdentifier>{1a0d0f24-f855-48d4-a989-1087b8da6d4e}</UniqueIdentifier>
+      <UniqueIdentifier>{3eb45137-b836-4be7-96d2-fb33319409e9}</UniqueIdentifier>
     </Filter>
     <Filter Include="Helpers">
-      <UniqueIdentifier>{cc7a90ca-5022-4284-be05-a2e46c590b4f}</UniqueIdentifier>
+      <UniqueIdentifier>{453d2880-6fbb-4280-a310-a9481d12d812}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -31,11 +31,11 @@
     <ClCompile Include="DDWGraphics.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
-    <ClCompile Include="DDWMasterParser.cpp">
-      <Filter>Parser</Filter>
-    </ClCompile>
     <ClCompile Include="DDWChannel.cpp">
       <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="DDWMasterParser.cpp">
+      <Filter>Parser</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -48,14 +48,14 @@
     <ClInclude Include="DDWGraphics.h">
       <Filter>GUI</Filter>
     </ClInclude>
+    <ClInclude Include="DDWChannel.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
     <ClInclude Include="DDWMasterParser.h">
       <Filter>Parser</Filter>
     </ClInclude>
     <ClInclude Include="Structs.h">
       <Filter>Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="DDWChannel.h">
-      <Filter>Audio</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

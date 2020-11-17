@@ -3,7 +3,8 @@
 
 DDWChannel::DDWChannel()
 	:m_pCurrentSound{ nullptr },
-	m_Position{}
+	m_Position{},
+	m_Volume{ 1.f }
 {
 }
 
@@ -16,6 +17,22 @@ void DDWChannel::Play(DDWSound* pSound)
 void DDWChannel::Stop()
 {
 	m_pCurrentSound = nullptr;
+}
+
+void DDWChannel::SetVolume(float volume)
+{
+	//Clamp the volume between 1 and 0
+	if (volume > 1.f)
+		volume = 1.f;
+	else if (volume < 0.f)
+		volume = 0.f;
+
+	m_Volume = volume;
+}
+
+bool DDWChannel::IsFree() const
+{
+	return m_pCurrentSound == nullptr;
 }
 
 void DDWChannel::WriteSoundData(signed short* pData, int count)
@@ -34,13 +51,13 @@ void DDWChannel::WriteSoundData(signed short* pData, int count)
 		}
 
 		//Read value from sound data at current position
-		float value = m_pCurrentSound->GetData().pData[m_Position] * 1.f; //{1.f = volume}
+		float value = m_pCurrentSound->GetData().pData[m_Position] * m_Volume;
 
 		//Write to left and right channels
 		pData[i] = (signed short)(value + pData[i]);
 		pData[i + 1] = (signed short)(value + pData[i + 1]);
 
-		//Advance the position by 1 sample
-		++m_Position;
+		//Advance the position by 2 samples, since the L and R channel have already been written
+		m_Position += 2;
 	}
 }

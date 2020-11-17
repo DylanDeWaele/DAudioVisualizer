@@ -5,27 +5,27 @@ struct WAVFileFormat
 public:
 	~WAVFileFormat()
 	{
-		if (pData)
-			delete[] pData;
+		delete[] pData;
 	}
+
 	//The "RIFF" chunk descriptor
 	char chunkID[4];
-	unsigned long chunkSize;
+	unsigned int chunkSize;
 	char fileFormat[4];
 
 	//The "fmt" sub-chunk
 	char subChunkID[4];
-	unsigned long subChunkSize;
+	unsigned int subChunkSize;
 	unsigned short audioFormat;
 	unsigned short numChannels;
-	unsigned long sampleRate;
-	unsigned long bytesPerSecond;
+	unsigned int sampleRate;
+	unsigned int bytesPerSecond;
 	unsigned short blockAlign;
 	unsigned short bitsPerSample;
 
 	//The data sub-chunk
 	char dataChunkID[4];
-	unsigned long dataSize;
-	unsigned long dataSizeDivTwo;
+	unsigned int dataSize;
+	unsigned int dataSizeDivTwo;
 	signed short* pData;
 };

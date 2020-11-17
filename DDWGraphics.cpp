@@ -7,6 +7,7 @@ DDWGraphics::DDWGraphics()
 {
 }
 
+
 DDWGraphics& DDWGraphics::GetInstance()
 {
 	static DDWGraphics instance;

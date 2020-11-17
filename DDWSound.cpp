@@ -2,40 +2,35 @@
 #include <iostream>
 
 #include "DDWAudio.h"
-
+#include "DDWChannel.h"
+#include "DDWMasterParser.h"
 
 DDWSound::DDWSound(const std::string& filename)
 	: m_Filename{ filename },
-	m_DataType{},
 	m_WAVData{}
 {
 	LoadSound(filename);
 }
 
-DDWSound::~DDWSound()
-{
-
-}
-
-
-WAVFileFormat DDWSound::GetData() const
+const WAVFileFormat& DDWSound::GetData() const
 {
 	return m_WAVData;
 }
 
+void DDWSound::Play()
+{
+	//Play the sound in a free channel
+	DDWAudio::GetInstance().GetFreeChannel()->Play(this);
+}
 
 void DDWSound::LoadSound(const std::string& filename)
 {
 	std::string extension{};
 
-	//1. Find the filenames extension
 	extension = GetFileExtension(filename);
 
-	//2. Check the extension and load the corresponding parser function
 	if (extension == "wav") 
 	{
-		m_DataType = DataType::WAV;
-
 		if (!DDWMasterParser::GetInstance().LoadWAVFile(filename, m_WAVData))
 			std::cout << "Error loading " << filename << std::endl;
 	}

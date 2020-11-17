@@ -9,7 +9,7 @@ FMOD_RESULT F_CALLBACK WriteSoundData(FMOD_SOUND*, void* pData, unsigned int len
 
 	signed short* pPCMData = (signed short*)pData;
 
-	int pcmDataCount = length / 2;
+	const unsigned int pcmDataCount = length / 2;
 
 	const unsigned int amountOfChannels = DDWAudio::GetInstance().GetAmountOfChannels();
 	const std::vector<DDWChannel*>& pChannels = DDWAudio::GetInstance().GetChannels();
@@ -34,12 +34,15 @@ DDWAudio::DDWAudio()
 
 DDWAudio::~DDWAudio()
 {
-	m_pSystem->release();
+	m_pSound->release();
 
 	//Delete all channels
 	for (DDWChannel* pChannel : m_pChannels)
 		delete pChannel;
+	
+	m_pSystem->release();
 }
+
 
 DDWAudio& DDWAudio::GetInstance()
 {
@@ -65,31 +68,43 @@ void DDWAudio::Initialize()
 		return;
 	}
 
-	std::cout << "Successfully initialized FMOD system!" << std::endl;
-
-	//Create vector of channels
 	for (unsigned int i = 0; i < m_AmountOfChannels; i++)
 	{
 		m_pChannels.push_back(new DDWChannel{});
 	}
 
-	//Initialize looping sound
-	memset(&m_SoundInfo, 0, sizeof(FMOD_CREATESOUNDEXINFO));
+	//Initialize FMOD callback loop
+	const int sampleRate = 44100;
+
+	m_SoundInfo = { 0 };
 	m_SoundInfo.cbsize = sizeof(FMOD_CREATESOUNDEXINFO);
-
-	m_SoundInfo.defaultfrequency = 44100;
 	m_SoundInfo.format = FMOD_SOUND_FORMAT_PCM16;
-	m_SoundInfo.numchannels = 2;
-
-	m_SoundInfo.length = 44100 * 2 * sizeof(signed short) * 100; //100 second sound
-	m_SoundInfo.decodebuffersize = 4410;
-
+	m_SoundInfo.length = sampleRate * m_AmountOfChannels * sizeof(signed short) * 10; //10 second sound buffer
+	m_SoundInfo.numchannels = m_AmountOfChannels;
 	m_SoundInfo.pcmreadcallback = WriteSoundData;
+	m_SoundInfo.defaultfrequency = sampleRate;
+	m_SoundInfo.decodebuffersize = (int)(sampleRate * 0.1); //Nr of samples we will be submitting at a time => 100ms for this
 
-	//Create a looping sound
+	//Create a sound loop
 	FMOD_MODE mode = FMOD_LOOP_NORMAL | FMOD_OPENUSER;
-	m_pSystem->createStream(nullptr, mode, &m_SoundInfo, &m_pSound);
-	m_pSystem->playSound(m_pSound, nullptr, false, nullptr);
+
+	fr = m_pSystem->createStream(nullptr, mode, &m_SoundInfo, &m_pSound);
+
+	if (fr != FMOD_OK)
+	{
+		std::cout << "Failed to create FMOD stream for the FMOD system." << std::endl;
+		return;
+	}
+
+	fr = m_pSystem->playSound(m_pSound, nullptr, false, nullptr);
+
+	if (fr != FMOD_OK)
+	{
+		std::cout << "Failed to start the sound loop of the FMOD system." << std::endl;
+		return;
+	}
+
+	std::cout << "Successfully initialized FMOD system!" << std::endl;
 }
 
 void DDWAudio::Update()
@@ -105,4 +120,17 @@ int DDWAudio::GetAmountOfChannels() const
 const std::vector<DDWChannel*>& DDWAudio::GetChannels() const
 {
 	return m_pChannels;
+}
+
+DDWChannel* DDWAudio::GetFreeChannel() const
+{
+	//Loop over the channels and return the first free one
+	for (DDWChannel* pChannel : m_pChannels) 
+	{
+		if (pChannel->IsFree())
+			return pChannel;
+	}
+
+	std::cout << "No free channel available." << std::endl;
+	return nullptr;
 }

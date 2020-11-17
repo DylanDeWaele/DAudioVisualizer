@@ -4,9 +4,7 @@
 class DDWGraphics
 {
 public:
-
 	DDWGraphics();
-
 	~DDWGraphics() = default;
 
 	void Initialize();
